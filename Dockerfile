@@ -10,5 +10,5 @@ COPY nginx.conf /etc/nginx/nginx.conf
 # Expose only port 80 (Render allows only one port)
 EXPOSE 80
 
-# Start both NGINX and MinIO
-CMD nginx && minio server /data --console-address :9001
+# Start both NGINX and MinIO properly
+CMD sh -c "nginx && minio server /data --console-address :9001"
