@@ -1,12 +1,14 @@
-# Use MinIO official image
+# Use MinIO official image as base
 FROM minio/minio:latest
 
-# Expose MinIO ports
-EXPOSE 9000 9001
+# Install NGINX
+RUN apt-get update && apt-get install -y nginx
 
-# Set default environment variables
-ENV MINIO_ROOT_USER=my_minio_user
-ENV MINIO_ROOT_PASSWORD=my_minio_password
+# Copy the NGINX config
+COPY nginx.conf /etc/nginx/sites-enabled/default
 
-# Start MinIO server when the container runs
-CMD ["server", "/data", "--console-address", ":9001"]
+# Expose only port 80 (since Render allows only one port)
+EXPOSE 80
+
+# Start both NGINX and MinIO
+CMD service nginx start && minio server /data --console-address :9001
